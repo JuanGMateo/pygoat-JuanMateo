@@ -54,7 +54,7 @@ jobs:
           category: semgrep
 
   docker_build_scout:
-    name: Docker Build and Scout Scan
+    name: Docker Build, Push and Scout Scan
     runs-on: ubuntu-latest
     needs: [bandit_scan, semgrep_scan]
     steps:
@@ -64,22 +64,22 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_JUANMATEO }}
-          password: ${{ secrets.DOCKERHUB_TOKEN_JUANMATEO }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build local Docker image
+      - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
-          load: true
-          tags: pygoat:latest
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/pygoat:latest
 
       - name: Docker Scout Scan
         uses: docker/scout-action@v1
         with:
           command: cves
-          image: pygoat:latest
+          image: ${{ secrets.DOCKERHUB_USERNAME }}/pygoat:latest
           only-severities: critical,high
