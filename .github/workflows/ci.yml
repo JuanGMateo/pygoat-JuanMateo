@@ -75,11 +75,11 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/pygoat:latest
+          tags: ${{ secrets.DOCKERHUB_JUANMATEO }}/pygoat:latest
 
       - name: Docker Scout Scan
         uses: docker/scout-action@v1
         with:
           command: cves
-          image: ${{ secrets.DOCKERHUB_USERNAME }}/pygoat:latest
+          image: ${{ secrets.DOCKERHUB_JUANMATEO }}/pygoat:latest
           only-severities: critical,high
